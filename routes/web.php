@@ -7,6 +7,9 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\SeancesController;
 use App\Http\Controllers\Api\ClassesController;
 
+Route::get('/mobile', function () {
+    return view('mobile');
+})->name('mobile');
 
 Route::get('/', function () {
 
