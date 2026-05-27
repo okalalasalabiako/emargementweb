@@ -58,10 +58,15 @@
                 Connexion
             </button>
 
+
         </form>
 
     </div>
 </div>
+
+ <button class="login-btn">
+        <a href="{{ route('mobile') }}">Télécharger l'Application mobile</a>
+            </button>
 
 </body>
 </html>
