@@ -12,29 +12,59 @@ class ApiEmargementsController extends Controller
 {
     public function store(Request $request)
     {
+
+        /*
+        |--------------------------------------------------------------------------
+        | Validation des données
+        |--------------------------------------------------------------------------
+        */
+
         $validated = $request->validate([
-         
-        'signature' => ['required', 'string'],
-        'seances_id' => ['required', 'integer'],
-        'user_id' => ['nullable', 'integer'],
-        
-        ]);
-        $signature = Emargements::create([
 
-        'signature' => $validated['signature'],
-        'date' => now(),
-        'user_id' => $validated['user_id'] ?? Auth::id(),
-        'seances_id' => $validated['seances_id'],
+            'signature' => ['required', 'string'],
+
+            'seance_id' => ['required', 'integer'],
+
+            'user_id' => ['nullable', 'integer'],
 
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Création de l'émargement
+        |--------------------------------------------------------------------------
+        */
+
+        $emargement = Emargements::create([
+
+            'signature' => $validated['signature'],
+
+            'date' => now(),
+
+            'user_id' => $validated['user_id'] ?? Auth::id(),
+
+            'seance_id' => $validated['seance_id'],
+
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Réponse JSON
+        |--------------------------------------------------------------------------
+        */
 
         return response()->json([
+
             'status' => 'Signature enregistrée avec succès.',
-            'signature_id' => $signature->id,
+
+            'emargement_id' => $emargement->id,
+
         ], 201);
-        //return response()->json
-     
+
     }
 
 
 }
+
+
+

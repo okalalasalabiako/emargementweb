@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
                 $table->foreignId('seance_id')->constrained()->onDelete('cascade');
                 $table->boolean('present')->default(false);
+               
                 
         });
     }

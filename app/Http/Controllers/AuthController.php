@@ -10,22 +10,27 @@ class AuthController extends Controller
 
 public function connexion(Request $request)
 {
-// Validate request
-$credentials = $request->validate([
-'email' => ['required', 'email'], // Ou username au choix
-'password' => ['required'],
-]);
+    $credentials = $request->validate([
+        'email' => ['required', 'email'],
+        'password' => ['required'],
+    ]);
 
-if (! Auth::attempt($credentials)) {
-return redirect()
-->route('connexion')
-->with('error', 'Email ou mot de passe incorrect.');
-}
+    if (!Auth::attempt($credentials)) {
+        return redirect()
+            ->route('connexion')
+            ->with('error', 'Email ou mot de passe incorrect.');
+    }
 
-// Protéger contre les attaques de session fixation
-$request->session()->regenerate();
+    $request->session()->regenerate();
 
-return redirect()->route('accueil');
+    // 🔥 ICI on adapte la redirection selon le rôle
+    $user = Auth::user();
+
+    if ($user->role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return redirect()->route('accueil');
 }
 
 public function deconnexion(Request $request)

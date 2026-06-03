@@ -14,10 +14,17 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Créer 10 utilisateurs, chacun avec 10 séances associées
-       User::factory()->count(10)->has(Seances::factory()->count(10))->create();
+        User::factory()
+            ->count(10)
+            ->create()
+            ->each(function ($user) {
 
-    
-    //
+                Seances::factory()
+                    ->count(5)
+                    ->create([
+                        'user_id' => $user->id,
+                        'classe_id' => rand(1, 5),
+                    ]);
+            });
     }
 }

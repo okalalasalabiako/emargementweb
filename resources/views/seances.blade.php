@@ -1,81 +1,113 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Classes</title>
+ <!DOCTYPE html>
+<html lang="fr">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Séances</title>
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- DataTables -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
 </head>
+
 <body class="p-4">
 
-<h1>👥 Liste des Classes</h1>
+    <h1 class="mb-4">📚 Liste des Séances</h1>
 
-<a href="{{ route('classes.create') }}" class="btn btn-success mb-3">➕ Ajouter</a>
+    <!-- Message succès -->
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
 
-@if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-@endif
+    <!-- Tableau -->
+    <table id="myTable" class="table table-bordered table-striped">
 
-<table id="myTable" class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Classe</th>
-            <th>Séances</th>
-            <th>Utilisateurs</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Matière</th>
+                <th>Date</th>
+                <th>Heure début</th>
+                <th>Heure fin</th>
+                <th>Formateur</th>
+                <th>Classe</th>
+                <th>Validation</th>
+            </tr>
+        </thead>
 
-    <tbody>
-        @foreach($classes as $classe)
-        <tr>
-            <td>{{ $classe->id }}</td>
-            <td>{{ $classe->nom }}</td>
+        <tbody>
 
-            <!-- Séances -->
-            <td>
-                @forelse($classe->seances as $seance)
-                    {{ $seance->matiere }} ({{ $seance->date }})<br>
-                @empty
-                    <span class="text-muted">Aucune</span>
-                @endforelse
-            </td>
+            @foreach($seances as $seance)
 
-            <!-- Utilisateurs -->
-            <td>
-                @forelse($classe->apprenants as $user)
-                    {{ $user->name }}<br>
-                @empty
-                    <span class="text-muted">Aucun</span>
-                @endforelse
-            </td>
+                <tr>
 
-            <!-- Actions -->
-            <td>
-                <a href="{{ route('classes.edit', $classe->id) }}" class="btn btn-warning btn-sm">
-                    ✏️ Modifier
-                </a>
+                    <!-- ID -->
+                    <td>{{ $seance->id }}</td>
 
-                <form action="{{ route('classes.destroy', $classe->id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ?')">
-                        ❌ Supprimer
-                    </button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
+                    <!-- Matière -->
+                    <td>{{ $seance->matiere }}</td>
 
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+                    <!-- Date -->
+                    <td>{{ $seance->date }}</td>
 
-<script>
-    new DataTable('#myTable');
-</script>
+                    <!-- Heure début -->
+                    <td>{{ $seance->heure_debut }}</td>
+
+                    <!-- Heure fin -->
+                    <td>{{ $seance->heure_fin }}</td>
+
+                    <!-- Formateur -->
+                    <td>
+                        {{ $seance->user->name ?? 'Aucun formateur' }}
+                    </td>
+
+                    <!-- Classe -->
+                    <td>
+                        {{ $seance->classe->name ?? 'Aucune classe' }}
+                    </td>
+
+                    <!-- Validation -->
+                    <td>
+
+                        @if($seance->valide)
+
+                            <span class="badge bg-success">
+                                Validée
+                            </span>
+
+                        @else
+
+                            <span class="badge bg-danger">
+                                Non validée
+                            </span>
+
+                        @endif
+
+                    </td>
+
+                </tr>
+
+            @endforeach
+
+        </tbody>
+
+    </table>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+
+    <!-- Initialisation -->
+    <script>
+        new DataTable('#myTable');
+    </script>
 
 </body>
 </html>

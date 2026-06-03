@@ -18,7 +18,17 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <table id="myTable" class="table table-bordered">
+<div class="mb-3">
+    <label for="roleFilter" class="form-label">Filtrer par rôle :</label>
+    <select id="roleFilter" class="form-select" style="width: 200px;">
+        <option value="">Tous</option>
+        <option value="admin">Admin</option>
+        <option value="formateur">Formateur</option>
+        <option value="apprenant">Apprenant</option>
+    </select>
+</div>
+
+    <table id="myTable" class="table table-bordered table-striped">
         <thead>
             <tr>
                 <th>ID</th>
@@ -60,7 +70,19 @@
 
     <!-- Initialisation -->
     <script>
-        let table = new DataTable('#myTable');
+       <script>
+    let table = new DataTable('#myTable');
+
+    document.getElementById('roleFilter').addEventListener('change', function () {
+        let value = this.value;
+
+        if (value === "") {
+            table.column(5).search('').draw(); // colonne "Rôle"
+        } else {
+            table.column(5).search(value).draw();
+        }
+    });
+</script>
     </script>
 
 </body>
