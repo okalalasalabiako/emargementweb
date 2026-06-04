@@ -70,9 +70,8 @@ class ApiEmargementsController extends Controller
 {
     $seance = Seances::findOrFail($id);
 
-    $apprenants = User::where('classe_id', $seance->classe_id)
-        ->where('role', 'apprenant')
-        ->get();
+   $apprenants = User::where('classe_id', $seance->classe_id)
+    ->get();
 
     $resultat = [];
 
