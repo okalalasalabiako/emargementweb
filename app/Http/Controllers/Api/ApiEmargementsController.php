@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Emargements;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Seances;
+use App\Models\User;
+
 
 class ApiEmargementsController extends Controller
 
@@ -62,6 +65,34 @@ class ApiEmargementsController extends Controller
         ], 201);
 
     }
+
+    public function listeApprenants($id)
+{
+    $seance = Seances::findOrFail($id);
+
+    $apprenants = User::where('classe_id', $seance->classe_id)
+        ->where('role', 'apprenant')
+        ->get();
+
+    $resultat = [];
+
+    foreach ($apprenants as $apprenant) {
+
+        $aSigne = Emargements::where('user_id', $apprenant->id)
+            ->where('seance_id', $id)
+            ->exists();
+
+        $resultat[] = [
+            'id' => $apprenant->id,
+            'nom' => $apprenant->name,
+            'prenom' => $apprenant->prenom,
+            'signe' => $aSigne
+        ];
+    }
+
+    return response()->json($resultat);
+}
+  
 
 
 }

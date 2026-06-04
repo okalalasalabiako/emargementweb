@@ -46,7 +46,12 @@ Route::post('/connexion', [AuthController::class, 'connexion'])->name('connexion
 Route::get('/deconnexion', [AuthController::class, 'deconnexion'])->name('deconnexion.post');
 Route::get('/me', [AuthController::class, 'me'])->name('me');
 
+Route::get('/2fa', function () {
+    return view('auth.twofactor');
+})->name('2fa.form');
 
+Route::post('/2fa', [AuthController::class, 'verify2FA'])
+    ->name('2fa.verify');
 /*
 |--------------------------------------------------------------------------
 | ROUTES PROTÉGÉES (UTILISATEUR CONNECTÉ)
