@@ -37,7 +37,7 @@ class SeancesController extends Controller
         }
 
         // ETUDIANT affiche les séances de sa classe en fonction de l'utilisateur connecté
-        elseif ($user->role === 'apprenant') {       
+        elseif ($user->role === 'apprenant' || $user->role === 'etudiant') {       
 
             $seances = Seances::with(['user', 'classe'])
                 ->where('classe_id', $user->classe_id)
