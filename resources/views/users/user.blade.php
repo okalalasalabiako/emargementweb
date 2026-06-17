@@ -1,89 +1,213 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-    <title>Users</title>
-    
-    <!-- Bootstrap (optionnel mais joli) -->
+    <meta charset="UTF-8">
+    <title>Liste des utilisateurs</title>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: #1f2a44;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            height: 70px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2a44;
+        }
+
+        .logo span {
+            color: #e46b2c;
+        }
+
+        nav a {
+            margin-left: 25px;
+            text-decoration: none;
+            color: #1f2a44;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #e46b2c;
+        }
+
+        .page-container {
+            padding: 50px;
+        }
+
+        .card-custom {
+            background: white;
+            border-radius: 18px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+        }
+
+        h1 {
+            color: #1f2a44;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        .btn-add {
+            background: #e46b2c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn-add:hover {
+            background: #c95720;
+            color: white;
+        }
+
+        .filter-box {
+            margin: 25px 0;
+            width: 230px;
+        }
+
+        table {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        thead th {
+            background: #1f2a44 !important;
+            color: white !important;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 12px;
+            color: black;
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 12px;
+            color: white;
+        }
+    </style>
 </head>
-<body class="p-4">
 
-    <h1>👥 Liste des Users</h1>
-    <a href="{{ route('users.create') }}" class="btn btn-success mb-3">➕ Ajouter</a>
+<body>
 
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
+<header>
+    <div class="logo">
+        Groupe <span>GEFOR</span>
+    </div>
 
-<div class="mb-3">
-    <label for="roleFilter" class="form-label">Filtrer par rôle :</label>
-    <select id="roleFilter" class="form-select" style="width: 200px;">
-        <option value="">Tous</option>
-        <option value="admin">Admin</option>
-        <option value="formateur">Formateur</option>
-        <option value="apprenant">Apprenant</option>
-    </select>
+    <nav>
+        <a href="{{ route('accueil') }}">Accueil</a>
+        
+        <a href="{{ route('users') }}">Utilisateurs</a>
+        <a href="{{ route('deconnexion.post') }}">Déconnexion</a>
+    </nav>
+</header>
+
+<div class="page-container">
+
+    <div class="card-custom">
+
+        <h1>👥 Liste des utilisateurs</h1>
+
+        <a href="{{ route('users.create') }}" class="btn-add">
+            ➕ Ajouter
+        </a>
+
+        @if(session('success'))
+            <div class="alert alert-success mt-3">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <div class="filter-box">
+            <label for="roleFilter" class="form-label">Filtrer par rôle :</label>
+          <select id="roleFilter" class="form-select">
+    <option value="">Tous</option>
+    <option value="admin">Admin</option>
+    <option value="enseignant">Enseignant</option>
+    <option value="etudiant">Étudiant</option>
+</select>
+        </div>
+
+        <table id="myTable" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach($users as $user)
+                    <tr>
+                        <td>{{ $user->id }}</td>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->prenom }}</td>
+                        <td>{{ $user->username }}</td>
+                        <td>{{ $user->email }}</td>
+                        <td>{{ $user->role }}</td>
+                        <td>
+                            <a href="{{ route('users.update', $user->id) }}" class="btn-edit">
+                                ✏️ Modifier
+                            </a>
+
+                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline">
+                                @csrf
+                                @method('DELETE')
+
+                                <button class="btn-delete" onclick="return confirm('Supprimer ?')">
+                                    ❌ Supprimer
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+
+    </div>
+
 </div>
 
-    <table id="myTable" class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Rôle</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($users as $user)
-            <tr>
-                <td>{{ $user->id }}</td>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->prenom }}</td>
-                <td>{{ $user->username }}</td>
-                <td>{{ $user->email }}</td>
-                <td>{{ $user->role }}</td>
-                <td>
-                    <a href="{{ route('users.update', $user->id) }}" class="btn btn-warning btn-sm">✏️ Modifier</a>
-                    <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ?')">❌ Supprimer</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
 
-    <!-- jQuery (requis par DataTables) -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+<script>
+ let table = new DataTable('#myTable', {
+    order: [[5, 'asc']]
+});
 
-    <!-- Initialisation -->
-    <script>
-       <script>
-    let table = new DataTable('#myTable');
-
-    document.getElementById('roleFilter').addEventListener('change', function () {
-        let value = this.value;
-
-        if (value === "") {
-            table.column(5).search('').draw(); // colonne "Rôle"
-        } else {
-            table.column(5).search(value).draw();
-        }
-    });
+document.getElementById('roleFilter').addEventListener('change', function () {
+    table.column(5).search(this.value).draw();
+});
 </script>
-    </script>
 
 </body>
 </html>

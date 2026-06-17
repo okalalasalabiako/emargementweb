@@ -9,12 +9,14 @@ use Illuminate\Http\Request;
 
 class ClassesController extends Controller
 {
-    public function index()
-    {
-        $classes = Classes::with('seances', 'apprenants')->get();
+   public function index()
+{
+    $classes = Classes::withCount(['seances', 'apprenants'])
+        ->orderBy('name')
+        ->get();
 
-        return view('users.classes', compact('classes'));
-    }
+    return view('users.classes', compact('classes'));
+}
     public function create()
     {
         // Récupérer toutes les classes avec leurs séances associées
