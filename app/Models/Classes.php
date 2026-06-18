@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Classes extends Model
 {
-    protected $fillable = ['nom'];
+    protected $fillable = ['name'];
 
         // Ajout de la relation avec les séances de la classe
         public function seances()

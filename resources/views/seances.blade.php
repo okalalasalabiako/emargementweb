@@ -15,6 +15,24 @@
 
 <body class="p-4">
 
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <a href="{{ route('accueil') }}" class="btn btn-dark">
+            🏠 Accueil
+        </a>
+        <a href="{{ route('users') }}" class="btn btn-outline-dark">
+            👥 Utilisateurs
+        </a>
+        <a href="{{ route('classes') }}" class="btn btn-outline-dark">
+            🎓 Classes
+        </a>
+    </div>
+
+    <a href="{{ route('seances.create') }}" class="btn btn-success">
+        ➕ Ajouter une séance
+    </a>
+</div>
+
     <h1 class="mb-4">📚 Liste des Séances</h1>
 
     <!-- Message succès -->
@@ -36,6 +54,7 @@
                 <th>Heure fin</th>
                 <th>Formateur</th>
                 <th>Classe</th>
+                <th>Actions</th>
                 <th>Validation</th>
             </tr>
         </thead>
@@ -45,6 +64,31 @@
             @foreach($seances as $seance)
 
                 <tr>
+
+<td>
+
+    <a href="{{ route('seances.edit', $seance->id) }}"
+       class="btn btn-warning btn-sm">
+        ✏️ Modifier
+    </a>
+
+    <form action="{{ route('seances.destroy', $seance->id) }}"
+          method="POST"
+          style="display:inline">
+
+        @csrf
+        @method('DELETE')
+
+        <button class="btn btn-danger btn-sm"
+                onclick="return confirm('Supprimer cette séance ?')">
+
+            ❌ Supprimer
+
+        </button>
+
+    </form>
+
+</td>
 
                     <!-- ID -->
                     <td>{{ $seance->id }}</td>

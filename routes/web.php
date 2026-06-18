@@ -71,6 +71,7 @@ Route::middleware(['auth', 'isAdmin'])->group(function () {
     Route::post('/seances', [AccueilController::class, 'store'])->name('accueil.store');
 
     Route::get('/seances/{id}/edit', [AccueilController::class, 'edit'])->name('accueil.edit');
+    Route::get('/seances/{id}/edit', [SeancesController::class, 'edit'])->name('seances.edit');
     Route::put('/seances/{id}', [AccueilController::class, 'update'])->name('accueil.update');
     Route::delete('/seances/{id}', [AccueilController::class, 'destroy'])->name('accueil.destroy');
 

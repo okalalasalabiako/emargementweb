@@ -29,7 +29,7 @@ return view('classes.create', compact('classes'));
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'id' => 'nullable|exists:classes,id',
             'classe_id' => 'nullable|exists:classes,id',
             'seances' => 'nullable|array',
@@ -54,7 +54,7 @@ return view('classes.create', compact('classes'));
         $classe = Classes::findOrFail($id);
 
         $validated = $request->validate([
-            'nom' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         $classe->update($validated);
