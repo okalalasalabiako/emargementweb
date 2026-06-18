@@ -6,61 +6,99 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        body {
-            display: flex;
-            min-height: 100vh;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #f5f6f8;
         }
 
         .sidebar {
-            width: 250px;
-            background: #1f2937;
+            width: 260px;
+            height: 100vh;
+            background: #1f2a44;
             color: white;
-            padding: 20px;
+            padding: 35px 25px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.12);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 55px;
+            color: white;
+        }
+
+        .logo span {
+            color: #e46b2c;
         }
 
         .sidebar a {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 16px;
+            margin-bottom: 14px;
+            border-radius: 14px;
             color: white;
             text-decoration: none;
-            margin: 15px 0;
-            padding: 10px;
-            border-radius: 8px;
+            font-weight: 600;
+            transition: 0.3s;
         }
 
         .sidebar a:hover {
-            background: #374151;
+            background: #e46b2c;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .sidebar hr {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.25);
+            margin: 28px 0;
         }
 
         .content {
-            flex: 1;
-            padding: 20px;
-            background: #f3f4f6;
-        }
-
-        .title {
-            font-size: 20px;
-            margin-bottom: 20px;
+            margin-left: 260px;
+            min-height: 100vh;
+            background: #f5f6f8;
+            padding: 35px;
         }
     </style>
 </head>
+
 <body>
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
-        <h3>📊 Admin</h3>
 
-        <a href="{{ route('users') }}">👥 Users</a>
-        <a href="{{ route('classes') }}">🏫 Classes</a>
+        <div class="logo">
+            Groupe <span>GEFOR</span>
+        </div>
+
+        <a href="{{ route('accueil') }}">📊 Dashboard</a>
+        <a href="{{ route('users') }}">👥 Utilisateurs</a>
+        <a href="{{ route('classes') }}">🎓 Classes</a>
         <a href="{{ route('seances') }}">📅 Séances</a>
 
         <hr>
 
         <a href="{{ route('deconnexion.post') }}">🚪 Déconnexion</a>
+
     </div>
 
-    <!-- CONTENU -->
     <div class="content">
         @yield('content')
     </div>

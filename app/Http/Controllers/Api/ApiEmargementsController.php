@@ -9,13 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Seances;
 use App\Models\User;
 
-
 class ApiEmargementsController extends Controller
-
 {
     public function store(Request $request)
     {
-
         /*
         |--------------------------------------------------------------------------
         | Validation des données
@@ -23,14 +20,34 @@ class ApiEmargementsController extends Controller
         */
 
         $validated = $request->validate([
-
             'signature' => ['required', 'string'],
-
             'seance_id' => ['required', 'integer'],
-
             'user_id' => ['nullable', 'integer'],
-
         ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Récupération de l'utilisateur
+        |--------------------------------------------------------------------------
+        */
+
+        $userId = $validated['user_id'] ?? Auth::id();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Vérification : empêcher la double signature
+        |--------------------------------------------------------------------------
+        */
+
+        $dejaSigne = Emargements::where('user_id', $userId)
+            ->where('seance_id', $validated['seance_id'])
+            ->exists();
+
+        if ($dejaSigne) {
+            return response()->json([
+                'message' => 'Vous avez déjà signé cette séance.'
+            ], 409);
+        }
 
         /*
         |--------------------------------------------------------------------------
@@ -39,15 +56,10 @@ class ApiEmargementsController extends Controller
         */
 
         $emargement = Emargements::create([
-
             'signature' => $validated['signature'],
-
             'date' => now(),
-
-            'user_id' => $validated['user_id'] ?? Auth::id(),
-
+            'user_id' => $userId,
             'seance_id' => $validated['seance_id'],
-
         ]);
 
         /*
@@ -57,43 +69,35 @@ class ApiEmargementsController extends Controller
         */
 
         return response()->json([
-
             'status' => 'Signature enregistrée avec succès.',
-
             'emargement_id' => $emargement->id,
-
         ], 201);
-
     }
 
     public function listeApprenants($id)
-{
-    $seance = Seances::findOrFail($id);
+    {
+        $seance = Seances::findOrFail($id);
 
-   $apprenants = User::where('classe_id', $seance->classe_id)
-    ->get();
+        $apprenants = User::where('classe_id', $seance->classe_id)
+            ->get();
 
-    $resultat = [];
+        $resultat = [];
 
-    foreach ($apprenants as $apprenant) {
+        foreach ($apprenants as $apprenant) {
+            $aSigne = Emargements::where('user_id', $apprenant->id)
+                ->where('seance_id', $id)
+                ->exists();
 
-        $aSigne = Emargements::where('user_id', $apprenant->id)
-            ->where('seance_id', $id)
-            ->exists();
+            $resultat[] = [
+                'id' => $apprenant->id,
+                'nom' => $apprenant->name,
+                'prenom' => $apprenant->prenom,
+                'signe' => $aSigne
+            ];
+        }
 
-        $resultat[] = [
-            'id' => $apprenant->id,
-            'nom' => $apprenant->name,
-            'prenom' => $apprenant->prenom,
-            'signe' => $aSigne
-        ];
+        return response()->json($resultat);
     }
-
-    return response()->json($resultat);
-}
-  
-
-
 }
 
 

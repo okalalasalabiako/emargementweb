@@ -22,7 +22,7 @@ class SeancesController extends Controller
 
     public function create()
     {
-        $formateurs = User::where('role', 'enseignant')
+        $formateurs = User::whereIn('role', ['enseignant', 'formateur'])
             ->orderBy('name')
             ->get();
 
@@ -63,7 +63,7 @@ class SeancesController extends Controller
         $seance = Seances::with(['user', 'classe'])
             ->findOrFail($id);
 
-        $formateurs = User::where('role', 'enseignant')
+        $formateurs = User::whereIn('role', ['enseignant', 'formateur'])
             ->orderBy('name')
             ->get();
 

@@ -108,6 +108,8 @@
     <nav>
         <a href="{{ route('accueil') }}">Accueil</a>
         <a href="{{ route('classes') }}">Classes</a>
+        <a href="{{ route('users') }}">Utilisateurs</a>
+        <a href="{{ route('seances') }}">Séances</a>
         <a href="{{ route('deconnexion.post') }}">Déconnexion</a>
     </nav>
 </header>
